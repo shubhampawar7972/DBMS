@@ -1,0 +1,56 @@
+psvkm@svkm-HP-200-G3-AiO:~$ sudo mysql
+[sudo] password for svkm: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 14
+Server version: 8.0.28-0ubuntu0.20.04.3 (Ubuntu)
+
+Copyright (c) 2000, 2022, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> create database payment;
+Query OK, 1 row affected (0.10 sec)
+
+mysql> use payment;
+Database changed
+mysql> create table payments(customernumber int , checknumber varchar(40),amount int);
+Query OK, 0 rows affected (0.68 sec)
+
+mysql> insert into payments values (141,'JE105477',12000),(120,'MH45611',800),(135,'EF78955',500) ;
+Query OK, 3 rows affected (0.09 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select customernumber,amount from payments where amount = (select max(amount) from payments);
++----------------+--------+
+| customernumber | amount |
++----------------+--------+
+|            141 |  12000 |
++----------------+--------+
+1 row in set (0.01 sec)
+
+mysql> create view as select customername,amount from payments;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'as select customername,amount from payments' at line 1
+mysql> create view as customerdetails select customername,amount from payments;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'as customerdetails select customername,amount from payments' at line 1
+mysql> create view customerdetails  as select customername,amount from payments;
+ERROR 1054 (42S22): Unknown column 'customername' in 'field list'
+mysql> create view customerdetails  as select customernumber,amount from payments;
+Query OK, 0 rows affected (0.11 sec)
+
+mysql> select * from customerdetails;
++----------------+--------+
+| customernumber | amount |
++----------------+--------+
+|            141 |  12000 |
+|            120 |    800 |
+|            135 |    500 |
++----------------+--------+
+3 rows in set (0.01 sec)
+
+mysql> 
+
+
